@@ -154,7 +154,7 @@ wifimenu_setup() {
         selection=0
     fi
 
-    if [ $wifi_list != "" ]; then
+    if [[ $wifi_list != "" ]]; then
         wifi_list_prefix="$wifi_list_prefix\n"
     fi
 
