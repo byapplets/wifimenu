@@ -1,14 +1,35 @@
 #!/bin/bash
-
+#
+#  █     █░ ██▓  █████▒██▓ ███▄ ▄███▓▓█████  ███▄    █  █    ██     ▄▄▄▄ ▓██   ██▓
+# ▓█░ █ ░█░▓██▒▓██   ▒▓██▒▓██▒▀█▀ ██▒▓█   ▀  ██ ▀█   █  ██  ▓██▒   ▓█████▄▒██  ██▒
+# ▒█░ █ ░█ ▒██▒▒████ ░▒██▒▓██    ▓██░▒███   ▓██  ▀█ ██▒▓██  ▒██░   ▒██▒ ▄██▒██ ██░
+# ░█░ █ ░█ ░██░░▓█▒  ░░██░▒██    ▒██ ▒▓█  ▄ ▓██▒  ▐▌██▒▓▓█  ░██░   ▒██░█▀  ░ ▐██▓░
+# ░░██▒██▓ ░██░░▒█░   ░██░▒██▒   ░██▒░▒████▒▒██░   ▓██░▒▒█████▓    ░▓█  ▀█▓░ ██▒▓░
+# ░ ▓░▒ ▒  ░▓   ▒ ░   ░▓  ░ ▒░   ░  ░░░ ▒░ ░░ ▒░   ▒ ▒ ░▒▓▒ ▒ ▒    ░▒▓███▀▒ ██▒▒▒ 
+#   ▒ ░ ░   ▒ ░ ░      ▒ ░░  ░      ░ ░ ░  ░░ ░░   ░ ▒░░░▒░ ░ ░    ▒░▒   ░▓██ ░▒░ 
+#   ░   ░   ▒ ░ ░ ░    ▒ ░░      ░      ░      ░   ░ ░  ░░░ ░ ░     ░    ░▒ ▒ ░░  
+#     ░     ░          ░         ░      ░  ░         ░    ░         ░     ░ ░     
+#                                                                        ░░ ░     
+#                 ███▄ ▄███▓ ██▀███        ▄▄▄▄ ▓██   ██▓ ▄▄▄                     
+#                ▓██▒▀█▀ ██▒▓██ ▒ ██▒     ▓█████▄▒██  ██▒▒████▄                   
+#                ▓██    ▓██░▓██ ░▄█ ▒     ▒██▒ ▄██▒██ ██░▒██  ▀█▄                 
+#                ▒██    ▒██ ▒██▀▀█▄       ▒██░█▀  ░ ▐██▓░░██▄▄▄▄██                
+#                ▒██▒   ░██▒░██▓ ▒██▒ ██▓ ░▓█  ▀█▓░ ██▒▓░ ▓█   ▓██▒               
+#                ░ ▒░   ░  ░░ ▒▓ ░▒▓░ ▒▓▒ ░▒▓███▀▒ ██▒▒▒  ▒▒   ▓▒█░               
+#                ░  ░      ░  ░▒ ░ ▒░ ░▒  ▒░▒   ░▓██ ░▒░   ▒   ▒▒ ░               
+#                ░      ░     ░░   ░  ░    ░    ░▒ ▒ ░░    ░   ▒                  
+#                       ░      ░       ░   ░     ░ ░           ░  ░               
+#                                      ░        ░░ ░                              
+#
 # Script setup
+wifimenu_dir="$(dirname "${BASH_SOURCE[0]}")/.."
+chmod +r $wifimenu_dir/scripts/wifidaemon/wifidaemon_setup
+source $wifimenu_dir/scripts/wifidaemon/wifidaemon_setup
+
 # Theming
-conf_dir=~/.config/rofi/config
+conf_dir=$wifimenu_dir/config
 theme_wifimenu=$conf_dir/wifimenu.rasi
 theme_pwd_prompt=$conf_dir/pwd.rasi
-
-# Wifi daemon setup
-wifidaemon_dir=~/.config/rofi/scripts/wifidaemon
-wifidaemon_bin=$wifidaemon_dir/wifidaemon.sh
 
 # Dmenu tags
 tag_not_connected=""
@@ -30,6 +51,7 @@ rofi_menu_offset() {
         -selected-row "$2" \
         -p "$1" \
         -l "$3" \
+        -normal-window \
         -theme $theme_wifimenu
 }
 
@@ -49,7 +71,7 @@ rofi_pwd_prompt() {
 
 # Check last scan by the wifi daemon
 check_last_scan() {
-    tempfile_path=$wifidaemon_dir/tmp/wifilist
+    tempfile_path=$daemon_dir/tmp/wifilist
 
     if [ ! -e "$tempfile_path" ]; then
         return 1
@@ -68,7 +90,7 @@ check_last_scan() {
 # Prompt nmcli to perform wifi scan
 run_scan() {
     notify-send "Scanning available Wi-Fi networks..."
-    $wifidaemon_bin
+    $daemon_bin
 }
 
 # Prompt nmcli to re-scan available wifi stations
@@ -137,8 +159,8 @@ connect() {
 # Pre main dmenu setup
 wifimenu_setup() {
     if [ "$toggle" == "$tag_wifi_disable" ]; then
-        current_wifi=$(cat $wifidaemon_dir/tmp/currentwifi)
-        wifi_list=$(cat $wifidaemon_dir/tmp/wifilist)
+        current_wifi=$(cat $current_wifi_path 2>/dev/null)
+        wifi_list=$(cat $wifi_list_path 2>/dev/null)
         
         if [ "$current_wifi" == "$tag_not_connected" ]; then
             current_wifi="󰤭      Not connected "
@@ -154,7 +176,7 @@ wifimenu_setup() {
         selection=0
     fi
 
-    if [[ $wifi_list != "" ]]; then
+    if [[ "$wifi_list" != "" ]]; then
         wifi_list_prefix="$wifi_list_prefix\n"
     fi
 
@@ -211,6 +233,12 @@ show_mainmenu() {
 # Display "Manage known networks" submenu
 show_manage_submenu() {
     known_networks=$(nmcli connection show | grep "wifi" | sed -r 's/\s{2,}/:/g' | cut -d ':' -f1)
+
+    rows=$(echo -e "$known_networks" | wc -l)
+    if [ "$rows" -gt 12 ]; then
+        rows=12
+    fi
+
     known_network=$(echo -e "$tag_back\n$known_networks" | uniq -u | rofi_menu "$tag_manage_known_prompt" "$rows")
 
     case "$known_network" in
