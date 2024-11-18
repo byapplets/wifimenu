@@ -51,7 +51,6 @@ rofi_menu_offset() {
         -selected-row "$2" \
         -p "$1" \
         -l "$3" \
-        -normal-window \
         -theme $theme_wifimenu
 }
 
