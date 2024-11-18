@@ -70,16 +70,14 @@ rofi_pwd_prompt() {
 
 # Check last scan by the wifi daemon
 check_last_scan() {
-    tempfile_path=$daemon_dir/tmp/wifilist
-
-    if [ ! -e "$tempfile_path" ]; then
+    if [ ! -e "$wifi_list_path" ]; then
         return 1
     fi
 
-    last_scan=$(stat -c %Y "$tempfile_path")
+    last_scan=$(stat -c %Y "$wifi_list_path")
     time=$(date +%s)
 
-    if (( $time - $last_scan > 20 )); then
+    if (( $time - $last_scan > $wifidaemon_timeout )); then
         return 1
     fi
 

@@ -6,3 +6,7 @@ daemon_bin=$daemon_dir/wifidaemon
 daemon_tmp=/tmp/byapplets/wifidaemon
 wifi_list_path=$daemon_tmp/wifilist
 current_wifi_path=$daemon_tmp/currentwifi
+
+if [[ ! -v wifidaemon_timeout ]]; then
+    wifidaemon_timeout=30
+fi
