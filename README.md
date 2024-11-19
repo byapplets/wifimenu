@@ -1,4 +1,4 @@
-# Byapplets Wifimenu
+# Bya-applets Wifimenu
 
 A [rofi](https://github.com/davatorium/rofi) based dynamic menu applet to manage Wi-Fi using [NetworkManager](https://networkmanager.dev/) nmcli.
 
