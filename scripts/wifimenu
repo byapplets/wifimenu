@@ -204,6 +204,7 @@ show_mainmenu() {
         "$tag_wifi_enable")
             nmcli radio wifi on
             get_connection_status
+            sleep 0.2
             rescan
             ;;
 
@@ -218,6 +219,7 @@ show_mainmenu() {
             ;;
 
         "$tag_rescan")
+            sleep 0.2
             rescan
             ;;
 
@@ -232,6 +234,7 @@ show_manage_submenu() {
     known_networks=$(nmcli connection show | grep "wifi" | sed -r 's/\s{2,}/:/g' | cut -d ':' -f1)
 
     rows=$(echo -e "$known_networks" | wc -l)
+    ((rows++))
     if [ "$rows" -gt 12 ]; then
         rows=12
     fi
@@ -265,6 +268,7 @@ show_network_submenu() {
 
         "$tag_forget_connection")
             forget_connection "$known_network"
+            sleep 0.2
             show_manage_submenu
             ;;
 
