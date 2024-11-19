@@ -2,7 +2,9 @@
 
 A [rofi](https://github.com/davatorium/rofi) based dynamic menu applet to manage Wi-Fi using [NetworkManager](https://networkmanager.dev/) nmcli.
 
-<video src="assets/wifimenu.mp4" width="706" height="530" controls></video>
+<p align="center">
+  <img src="assets/wifimenu.gif" alt="wifimenu" width="600"/>
+</p>
 
 Inspired by [rofi-wifi-menu](https://github.com/ericmurphyxyz/rofi-wifi-menu) and the GOAT [Catppuccin](https://github.com/catppuccin/rofi) rofi theme.
 
