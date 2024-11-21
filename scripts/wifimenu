@@ -239,7 +239,11 @@ show_manage_submenu() {
         rows=12
     fi
 
-    known_network=$(echo -e "$tag_back\n$known_networks" | uniq -u | rofi_menu "$tag_manage_known_prompt" "$rows")
+    if [[ "$known_networks" != "" ]]; then
+        known_networks="\n$known_networks"
+    fi
+
+    known_network=$(echo -e "$tag_back$known_networks" | uniq -u | rofi_menu "$tag_manage_known_prompt" "$rows")
 
     case "$known_network" in
         "")
