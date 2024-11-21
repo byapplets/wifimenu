@@ -233,14 +233,15 @@ show_mainmenu() {
 show_manage_submenu() {
     known_networks=$(nmcli connection show | grep "wifi" | sed -r 's/\s{2,}/:/g' | cut -d ':' -f1)
 
-    rows=$(echo -e "$known_networks" | wc -l)
-    ((rows++))
-    if [ "$rows" -gt 12 ]; then
-        rows=12
-    fi
-
     if [[ "$known_networks" != "" ]]; then
+        rows=$(echo -e "$known_networks" | wc -l)
+        ((rows++))
+        if [ "$rows" -gt 12 ]; then
+            rows=12
+        fi
         known_networks="\n$known_networks"
+    else
+        rows=1
     fi
 
     known_network=$(echo -e "$tag_back$known_networks" | uniq -u | rofi_menu "$tag_manage_known_prompt" "$rows")
